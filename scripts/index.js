@@ -28,3 +28,22 @@ const initialCards = [
 initialCards.forEach(function (card) {
   console.log(card.name);
 });
+
+const buttonEdit = document.querySelector(".profile__edit-button");
+const editPopup = document.querySelector("#edit-popup");
+const buttonClose = editPopup.querySelector(".popup__close");
+
+function openModal(modal) {
+  modal.classList.add("popup_is-opened");
+}
+
+function closeModal(modal) {
+  modal.classList.remove("popup_is-opened");
+}
+
+buttonEdit.addEventListener("click", function () {
+  openModal(editPopup);
+});
+buttonClose.addEventListener("click", function () {
+  closeModal(editPopup);
+});
