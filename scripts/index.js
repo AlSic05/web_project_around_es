@@ -25,6 +25,10 @@ const initialCards = [
   },
 ];
 
+const cardPopup = document.querySelector("#new-card-popup");
+const cardForm = cardPopup.querySelector(".popup__form");
+const cardNameInput = cardForm.querySelector(".popup__input_type_card-name");
+const cardLinkInput = cardForm.querySelector(".popup__input_type_card-link");
 const buttonEdit = document.querySelector(".profile__edit-button");
 const editPopup = document.querySelector("#edit-popup");
 const buttonClose = editPopup.querySelector(".popup__close");
@@ -37,8 +41,9 @@ const inputDescription = editPopup.querySelector(
 let formElement = document.querySelector(".popup__form");
 const cardTemplate = document.getElementById("card-template");
 const buttonAddCard = document.querySelector(".profile__add-button");
-const cardPopup = document.querySelector("#new-card-popup");
 const buttonCloseCardPopup = cardPopup.querySelector(".popup__close");
+const modalImagePopup = document.querySelector("#image-popup");
+const buttonCloseImagePopup = modalImagePopup.querySelector(".popup__close");
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
@@ -76,6 +81,16 @@ function getCardElement(
   cardTitle.textContent = name;
   cardImage.src = link;
   cardImage.alt = name;
+  cardImage.addEventListener("click", function () {
+    const modalImagePopup = document.querySelector("#image-popup");
+    const modalImage = modalImagePopup.querySelector(".popup__image");
+    const modalCaption = modalImagePopup.querySelector(".popup__caption");
+    modalImage.src = link;
+    modalImage.alt = name;
+    modalCaption.textContent = name;
+    openModal(modalImagePopup);
+  });
+
   likeButton.addEventListener("click", function (evt) {
     evt.target.classList.toggle("card__like-button_is-active");
   });
@@ -118,6 +133,10 @@ buttonCloseCardPopup.addEventListener("click", function () {
 cardPopup
   .querySelector(".popup__form")
   .addEventListener("submit", handleCardFormSubmit);
+
+buttonCloseImagePopup.addEventListener("click", function () {
+  closeModal(modalImagePopup);
+});
 
 initialCards.forEach(function (card) {
   console.log(card.name);
