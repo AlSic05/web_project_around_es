@@ -71,9 +71,13 @@ function getCardElement(
   const cardElement = cardTemplate.content.cloneNode(true);
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
+  const likeButton = cardElement.querySelector(".card__like-button");
   cardTitle.textContent = name;
   cardImage.src = link;
   cardImage.alt = name;
+  likeButton.addEventListener("click", function (evt) {
+    evt.target.classList.toggle("card__like-button_active");
+  });
   return cardElement;
 }
 
