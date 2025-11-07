@@ -48,6 +48,9 @@ const container = document.querySelector(".cards__list");
 const profileForm = document.querySelector("#edit-profile-form");
 const profileInputs = profileForm.querySelectorAll(".popup__input");
 const profileButton = profileForm.querySelector(".popup__button");
+const newCardForm = document.querySelector("#new-card-form");
+const newCardInputs = newCardForm.querySelectorAll(".popup__input");
+const newCardButton = newCardForm.querySelector(".popup__button");
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
@@ -73,10 +76,7 @@ function handleProfileFormSubmit(evt) {
   profileDescription.textContent = inputDescription.value;
 }
 
-function getCardElement(
-  name = "Sin título",
-  link = "./images/placeholder.jpg"
-) {
+function getCardElement() {
   const cardElement = cardTemplate.content.cloneNode(true);
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
@@ -187,7 +187,18 @@ initialCards.forEach(function (card) {
 
 profileInputs.forEach((input) => {
   input.addEventListener("input", () => {
-    toggleButtonState(profileInputs, profileButton);
     checkInputValidity(profileForm, input);
+    toggleButtonState(profileInputs, profileButton);
   });
 });
+
+newCardInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    checkInputValidity(newCardForm, input);
+    toggleButtonState(newCardInputs, newCardButton);
+  });
+});
+
+toggleButtonState(profileInputs, profileButton);
+
+toggleButtonState(newCardInputs, newCardButton);
