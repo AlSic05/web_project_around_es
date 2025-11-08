@@ -1,34 +1,34 @@
 const initialCards = [
   {
     name: "Valle de Yosemite",
-    link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
+    link: "https://concepto.de/wp-content/uploads/2018/08/Picos-de-montana.jpg",
   },
   {
     name: "Lago Louise",
-    link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg",
+    link: "https://cdn0.geoenciclopedia.com/es/posts/8/0/0/montanas_8_orig.jpg",
   },
   {
     name: "Montañas Calvas",
-    link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg",
+    link: "https://res.cloudinary.com/dmcvdsh4c/image/upload/v1711699300/iceebookImage/ciencia/geologia/geologia-montanas-formacion-misterios_iz66pg.webp",
   },
   {
     name: "Latemar",
-    link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg",
+    link: "https://concepto.de/wp-content/uploads/2018/08/monta%C3%B1a-clima-min-e1533762913759.jpg",
   },
   {
     name: "Parque Nacional de la Vanoise",
-    link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg",
+    link: "https://content.nationalgeographic.com.es/medio/2025/01/18/himalaya_68c32f8b_250118135441_1280x720.webp",
   },
   {
     name: "Lago di Braies",
-    link: "https://tripleten-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
+    link: "https://humanidades.com/wp-content/uploads/2018/11/montan%CC%83as-e1543190116289-800x400.jpg",
   },
 ];
 
 const cardPopup = document.querySelector("#new-card-popup");
 const cardForm = cardPopup.querySelector(".popup__form");
 const cardNameInput = cardForm.querySelector(".popup__input_type_card-name");
-const cardLinkInput = cardForm.querySelector(".popup__input_type_card-link");
+const cardLinkInput = cardForm.querySelector(".popup__input_type_url");
 const buttonEdit = document.querySelector(".profile__edit-button");
 const editPopup = document.querySelector("#edit-popup");
 const buttonClose = editPopup.querySelector(".popup__close");
@@ -132,7 +132,7 @@ function renderCard(name, link) {
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
   const cardNameInput = document.querySelector(".popup__input_type_card-name");
-  const cardLinkInput = document.querySelector(".popup__input_type_card-link");
+  const cardLinkInput = document.querySelector(".popup__input_type_url");
   renderCard(
     cardNameInput.value,
     cardLinkInput.value,
