@@ -47,6 +47,19 @@ const buttonCloseImagePopup = modalImagePopup.querySelector(".popup__close");
 const container = document.querySelector(".cards__list");
 const profileForm = document.querySelector("#edit-profile-form");
 const newCardForm = document.querySelector("#new-card-form");
+const validationConfig = {
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
+
+const profileValidator = new FormValidator(validationConfig, profileForm);
+profileValidator.setEventListeners();
+
+const newCardValidator = new FormValidator(validationConfig, newCardForm);
+newCardValidator.setEventListeners();
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
