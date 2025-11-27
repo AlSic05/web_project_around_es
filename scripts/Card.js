@@ -1,9 +1,11 @@
+import { openModal } from "./utils.js";
+
 class Card {
-  constructor(name, link, templateSelector) {
+  constructor(name, link, templateSelector, modalImagePopup) {
     this._name = name;
     this._link = link;
     this._templateSelector = templateSelector;
-    this._handleImageClick = handleImageClick;
+    this._modalImagePopup = modalImagePopup;
   }
 
   _getTemplate() {
@@ -22,14 +24,14 @@ class Card {
   }
 
   _handleImageClick() {
-    const modalImage = modalImagePopup.querySelector(".popup__image");
-    const modalCaption = modalImagePopup.querySelector(".popup__caption");
+    const modalImage = this._modalImagePopup.querySelector(".popup__image");
+    const modalCaption = this._modalImagePopup.querySelector(".popup__caption");
 
     modalImage.src = this._link;
     modalImage.alt = this._name;
     modalCaption.textContent = this._name;
 
-    openModal(modalImagePopup);
+    openModal(this._modalImagePopup);
   }
 
   _setEventListeners(cardElement) {
@@ -46,6 +48,10 @@ class Card {
 
   generateCard() {
     const cardElement = this._getTemplate();
+    const cardImage = cardElement.querySelector(".card__image");
+    cardImage.src = this._link;
+    cardImage.alt = this._name;
+
     const cardTitle = cardElement.querySelector(".card__title");
     cardTitle.textContent = this._name;
 
@@ -54,3 +60,5 @@ class Card {
     return cardElement;
   }
 }
+
+export default Card;

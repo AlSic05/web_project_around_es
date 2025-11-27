@@ -1,3 +1,12 @@
+import Card from "./Card.js";
+import FormValidator from "./FormValidator.js";
+import {
+  openModal,
+  closeModal,
+  closePopupClick,
+  closePopupEsc,
+} from "./utils.js";
+
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -61,34 +70,6 @@ profileValidator.setEventListeners();
 const newCardValidator = new FormValidator(validationConfig, newCardForm);
 newCardValidator.setEventListeners();
 
-function openModal(modal) {
-  modal.classList.add("popup_is-opened");
-}
-
-function closeModal(modal) {
-  modal.classList.remove("popup_is-opened");
-}
-
-function closePopupClick() {
-  const popups = document.querySelectorAll(".popup");
-  popups.forEach((popup) => {
-    popup.addEventListener("mousedown", (evt) => {
-      if (evt.target === popup) {
-        closeModal(popup);
-      }
-    });
-  });
-}
-
-function closePopupEsc() {
-  document.addEventListener("keydown", (evt) => {
-    if (evt.key === "Escape") {
-      const openedPopup = document.querySelector(".popup_is-opened");
-      if (openedPopup) closeModal(openedPopup);
-    }
-  });
-}
-
 function fillProfileForm() {
   inputName.value = profileTitle.textContent;
   inputDescription.value = profileDescription.textContent;
@@ -110,7 +91,8 @@ function handleCardFormSubmit(evt) {
   const newCard = new Card(
     cardNameInput.value,
     cardLinkInput.value,
-    "#card-template"
+    "#card-template",
+    modalImagePopup
   );
   container.prepend(newCard.generateCard());
   evt.target.reset();
@@ -129,7 +111,12 @@ buttonCloseImagePopup.addEventListener("click", () =>
 );
 
 initialCards.forEach((cardData) => {
-  const card = new Card(cardData.name, cardData.link, "#card-template");
+  const card = new Card(
+    cardData.name,
+    cardData.link,
+    "#card-template",
+    modalImagePopup
+  );
   container.prepend(card.generateCard());
 });
 
