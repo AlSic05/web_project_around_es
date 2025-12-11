@@ -1,6 +1,9 @@
 import Card from "./Card.js";
-import FormValidator from "./FormValidator.js";
+import Section from "./Section.js";
 import PopupWithForm from "./PopupWithForm.js";
+import PopupWithImage from "./PopupWithImage.js";
+import UserInfo from "./UserInfo.js";
+import FormValidator from "./FormValidator.js";
 
 const initialCards = [
   {
@@ -63,36 +66,51 @@ profileValidator.setEventListeners();
 const newCardValidator = new FormValidator(validationConfig, newCardForm);
 newCardValidator.setEventListeners();
 
-initialCards.forEach((cardData) => {
-  const card = new Card(
-    cardData.name,
-    cardData.link,
-    "#card-template",
-    modalImagePopup
-  );
-  container.prepend(card.generateCard());
+const imagePopup = new PopupWithImage("#image-popup");
+imagePopup.setEventListeners();
+
+const userInfo = new UserInfo({
+  nameSelector: ".profile__title",
+  jobSelector: ".profile__description",
 });
 
+const cardSection = new Section(
+  {
+    items: initialCards,
+    renderer: (cardData) => {
+      const card = new Card(
+        cardData.name,
+        cardData.link,
+        "#card-template",
+        (name, link) => imagePopup.open({ name, link })
+      );
+      cardSection.addItem(card.generateCard());
+    },
+  },
+  "cards__list"
+);
+cardSection.renderItems();
+
 const profilePopup = new PopupWithForm("#edit-popup", (formData) => {
-  profileTitle.textContent = formData.name;
-  profileDescription.textContent = formData.description;
+  userInfo.setUserInfo({ name: formData.name, job: formData.description });
 });
 profilePopup.setEventListeners();
 
 const cardPopupInstance = new PopupWithForm("#new-card-popup", (formData) => {
   const newCard = new Card(
-    formData["card-name"],
-    formData["url"],
+    formData["place-name"],
+    formData["link"],
     "#card-template",
-    modalImagePopup
+    (name, link) => imagePopup.open({ name, link })
   );
-  container.prepend(newCard.generateCard());
+  cardSection.addItem(newCard.generateCard());
 });
 cardPopupInstance.setEventListeners();
 
 buttonEdit.addEventListener("click", () => {
-  inputName.value = profileTitle.textContent;
-  inputDescription.value = profileDescription.textContent;
+  const currentUser = userInfo.getUserInfo();
+  inputName.value = currentUser.name;
+  inputDescription.value = currentUser.job;
   profilePopup.open();
 });
 
