@@ -4,34 +4,7 @@ import PopupWithForm from "./PopupWithForm.js";
 import PopupWithImage from "./PopupWithImage.js";
 import UserInfo from "./UserInfo.js";
 import FormValidator from "./FormValidator.js";
-import Api from "./Api.js";
-
-const initialCards = [
-  {
-    name: "Valle de Yosemite",
-    link: "https://concepto.de/wp-content/uploads/2018/08/Picos-de-montana.jpg",
-  },
-  {
-    name: "Lago Louise",
-    link: "https://cdn0.geoenciclopedia.com/es/posts/8/0/0/montanas_8_orig.jpg",
-  },
-  {
-    name: "Montañas Calvas",
-    link: "https://res.cloudinary.com/dmcvdsh4c/image/upload/v1711699300/iceebookImage/ciencia/geologia/geologia-montanas-formacion-misterios_iz66pg.webp",
-  },
-  {
-    name: "Latemar",
-    link: "https://concepto.de/wp-content/uploads/2018/08/monta%C3%B1a-clima-min-e1533762913759.jpg",
-  },
-  {
-    name: "Parque Nacional de la Vanoise",
-    link: "https://content.nationalgeographic.com.es/medio/2025/01/18/himalaya_68c32f8b_250118135441_1280x720.webp",
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://humanidades.com/wp-content/uploads/2018/11/montan%CC%83as-e1543190116289-800x400.jpg",
-  },
-];
+import Api, { getAppInfo } from "./Api.js";
 
 const cardPopup = document.querySelector("#new-card-popup");
 const cardForm = cardPopup.querySelector(".popup__form");
@@ -60,27 +33,54 @@ const validationConfig = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
 };
+let cardSection;
 
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
-    authorization: "7bc795a2-21ed-411d-9608-dd60c417ea7d",
+    authorization: "f259293f-0caf-46de-b937-becf0e8d1736",
     "Content-Type": "application/json",
   },
 });
 
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
-  jobSelector: ".profile__description",
+  aboutSelector: ".profile__description",
+  avatarSelector: ".profile__image",
 });
 
-api
-  .getUserInfo()
-  .then((res) => {
-    userInfo.setUserInfo({ name: res.name, job: res.about });
+const imagePopup = new PopupWithImage("#image-popup");
+imagePopup.setEventListeners();
+
+getAppInfo(api)
+  .then(([userData, cardsData]) => {
+    userInfo.setUserInfo({
+      name: userData.name,
+      about: userData.about,
+      avatar: userData.avatar,
+    });
+
+    cardSection = new Section(
+      {
+        items: cardsData,
+        renderer: (cardData) => {
+          const card = new Card(
+            cardData.name,
+            cardData.link,
+            "#card-template",
+            (name, link) => imagePopup.open({ name, link })
+          );
+          const cardElement = card.generateCard();
+          return card.generateCard();
+        },
+      },
+      "cards__list"
+    );
+
+    cardSection.renderItems();
   })
   .catch((err) => {
-    console.log("Error al cargar información del usuario:", err);
+    console.log("Error al cargar la aplicación:", err);
   });
 
 const profileValidator = new FormValidator(validationConfig, profileForm);
@@ -88,26 +88,6 @@ profileValidator.setEventListeners();
 
 const newCardValidator = new FormValidator(validationConfig, newCardForm);
 newCardValidator.setEventListeners();
-
-const imagePopup = new PopupWithImage("#image-popup");
-imagePopup.setEventListeners();
-
-const cardSection = new Section(
-  {
-    items: initialCards,
-    renderer: (cardData) => {
-      const card = new Card(
-        cardData.name,
-        cardData.link,
-        "#card-template",
-        (name, link) => imagePopup.open({ name, link })
-      );
-      cardSection.addItem(card.generateCard());
-    },
-  },
-  "cards__list"
-);
-cardSection.renderItems();
 
 const profilePopup = new PopupWithForm("#edit-popup", (formData) => {
   userInfo.setUserInfo({ name: formData.name, job: formData.description });
