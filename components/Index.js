@@ -4,6 +4,7 @@ import PopupWithForm from "./PopupWithForm.js";
 import PopupWithImage from "./PopupWithImage.js";
 import UserInfo from "./UserInfo.js";
 import FormValidator from "./FormValidator.js";
+import Api from "./Api.js";
 
 const initialCards = [
   {
@@ -60,6 +61,28 @@ const validationConfig = {
   errorClass: "popup__error_visible",
 };
 
+const api = new Api({
+  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  headers: {
+    authorization: "7bc795a2-21ed-411d-9608-dd60c417ea7d",
+    "Content-Type": "application/json",
+  },
+});
+
+const userInfo = new UserInfo({
+  nameSelector: ".profile__title",
+  jobSelector: ".profile__description",
+});
+
+api
+  .getUserInfo()
+  .then((res) => {
+    userInfo.setUserInfo({ name: res.name, job: res.about });
+  })
+  .catch((err) => {
+    console.log("Error al cargar información del usuario:", err);
+  });
+
 const profileValidator = new FormValidator(validationConfig, profileForm);
 profileValidator.setEventListeners();
 
@@ -68,11 +91,6 @@ newCardValidator.setEventListeners();
 
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
-
-const userInfo = new UserInfo({
-  nameSelector: ".profile__title",
-  jobSelector: ".profile__description",
-});
 
 const cardSection = new Section(
   {
