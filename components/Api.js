@@ -33,6 +33,17 @@ export default class Api {
       }),
     }).then(this._checkResponse);
   }
+
+  addCard(name, link) {
+    return fetch(this._baseUrl + "/cards", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({
+        name: name,
+        link: link,
+      }),
+    }).then(this._checkResponse);
+  }
 }
 
 export function getAppInfo(api) {

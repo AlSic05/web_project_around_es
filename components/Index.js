@@ -107,13 +107,22 @@ const profilePopup = new PopupWithForm("#edit-popup", (formData) => {
 profilePopup.setEventListeners();
 
 const cardPopupInstance = new PopupWithForm("#new-card-popup", (formData) => {
-  const newCard = new Card(
-    formData["place-name"],
-    formData["link"],
-    "#card-template",
-    (name, link) => imagePopup.open({ name, link })
-  );
-  cardSection.addItem(newCard.generateCard());
+  api
+    .addCard(formData["place-name"], formData["link"])
+    .then((cardData) => {
+      const newCard = new Card(
+        cardData.name,
+        cardData.link,
+        "#card-template",
+        (name, link) => imagePopup.open({ name, link })
+      );
+
+      cardSection.addItem(newCard.generateCard());
+      cardPopupInstance.close();
+    })
+    .catch((err) => {
+      console.log("Error al agregar tarjeta:", err);
+    });
 });
 cardPopupInstance.setEventListeners();
 
