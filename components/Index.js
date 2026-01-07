@@ -90,8 +90,20 @@ const newCardValidator = new FormValidator(validationConfig, newCardForm);
 newCardValidator.setEventListeners();
 
 const profilePopup = new PopupWithForm("#edit-popup", (formData) => {
-  userInfo.setUserInfo({ name: formData.name, job: formData.description });
+  api
+    .setUserInfo(formData.name, formData.description)
+    .then((updatedUserData) => {
+      userInfo.setUserInfo({
+        name: updatedUserData.name,
+        about: updatedUserData.about,
+      });
+      profilePopup.close();
+    })
+    .catch((err) => {
+      console.log("Error al actualizar el perfil:", err);
+    });
 });
+
 profilePopup.setEventListeners();
 
 const cardPopupInstance = new PopupWithForm("#new-card-popup", (formData) => {
@@ -108,7 +120,7 @@ cardPopupInstance.setEventListeners();
 buttonEdit.addEventListener("click", () => {
   const currentUser = userInfo.getUserInfo();
   inputName.value = currentUser.name;
-  inputDescription.value = currentUser.job;
+  inputDescription.value = currentUser.about;
   profilePopup.open();
 });
 
