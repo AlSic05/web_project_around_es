@@ -1,9 +1,20 @@
 class Card {
-  constructor(name, link, templateSelector, handleCardClick) {
+  constructor(
+    name,
+    link,
+    templateSelector,
+    handleCardClick,
+    handleLikeApi,
+    cardId,
+    isLiked
+  ) {
     this._name = name;
     this._link = link;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
+    this._handleLikeApi = handleLikeApi;
+    this._cardId = cardId;
+    this._isLiked = isLiked;
   }
 
   _getTemplate() {
@@ -13,7 +24,7 @@ class Card {
       .cloneNode(true);
   }
 
-  _handleLike(likeButton) {
+  _toggleLikeVisual(likeButton) {
     likeButton.classList.toggle("card__like-button_is-active");
   }
 
@@ -26,10 +37,23 @@ class Card {
     const likeButton = cardElement.querySelector(".card__like-button");
     const deleteButton = cardElement.querySelector(".card__delete-button");
 
-    likeButton.addEventListener("click", () => this._handleLike(likeButton));
+    if (this._isLiked) {
+      likeButton.classList.add("card__like-button_is-active");
+    }
+
+    likeButton.addEventListener("click", () => {
+      this._handleLikeApi(this._cardId, this._isLiked)
+        .then((updatedCard) => {
+          this._isLiked = !this._isLiked;
+          this._toggleLikeVisual(likeButton);
+        })
+        .catch((err) => console.log("Error al cambiar like:", err));
+    });
+
     deleteButton.addEventListener("click", () =>
       this._handleDelete(cardElement)
     );
+
     cardImage.addEventListener("click", () =>
       this._handleCardClick(this._name, this._link)
     );

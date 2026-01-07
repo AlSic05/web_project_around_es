@@ -68,9 +68,11 @@ getAppInfo(api)
             cardData.name,
             cardData.link,
             "#card-template",
-            (name, link) => imagePopup.open({ name, link })
+            (name, link) => imagePopup.open({ name, link }),
+            handleLikeApi,
+            cardData._id,
+            cardData.isLiked
           );
-          const cardElement = card.generateCard();
           return card.generateCard();
         },
       },
@@ -125,6 +127,14 @@ const cardPopupInstance = new PopupWithForm("#new-card-popup", (formData) => {
     });
 });
 cardPopupInstance.setEventListeners();
+
+const handleLikeApi = (cardId, isLiked) => {
+  if (isLiked) {
+    return api.removeLike(cardId);
+  } else {
+    return api.addLike(cardId);
+  }
+};
 
 buttonEdit.addEventListener("click", () => {
   const currentUser = userInfo.getUserInfo();
