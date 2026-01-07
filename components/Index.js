@@ -5,6 +5,7 @@ import PopupWithImage from "./PopupWithImage.js";
 import UserInfo from "./UserInfo.js";
 import FormValidator from "./FormValidator.js";
 import Api, { getAppInfo } from "./Api.js";
+import PopupWithConfirmation from "./PopupWithConfirmation.js";
 
 const cardPopup = document.querySelector("#new-card-popup");
 const cardForm = cardPopup.querySelector(".popup__form");
@@ -71,9 +72,10 @@ getAppInfo(api)
             (name, link) => imagePopup.open({ name, link }),
             handleLikeApi,
             cardData._id,
-            cardData.isLiked
+            cardData.isLiked,
+            handleDeleteCallback
           );
-          return card.generateCard();
+          return card.generateCard(confirmationPopup, api);
         },
       },
       "cards__list"
@@ -135,6 +137,24 @@ const handleLikeApi = (cardId, isLiked) => {
     return api.addLike(cardId);
   }
 };
+
+const confirmationPopup = new PopupWithConfirmation(
+  "#confirmation-popup",
+  () => {
+    if (confirmationPopup._onConfirmDelete) {
+      confirmationPopup._onConfirmDelete();
+    }
+  }
+);
+
+const handleDeleteCallback = (cardId, cardElement) => {
+  api
+    .deleteCard(cardId)
+    .then(() => cardElement.remove())
+    .catch((err) => console.log(err));
+};
+
+confirmationPopup.setEventListeners();
 
 buttonEdit.addEventListener("click", () => {
   const currentUser = userInfo.getUserInfo();
