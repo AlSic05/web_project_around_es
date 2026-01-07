@@ -53,6 +53,23 @@ class FormValidator {
     this._setEventListeners();
     this._toggleButtonState();
   }
+
+  resetValidation() {
+    this._inputList.forEach((inputElement) => {
+      const errorElement = this._formElement.querySelector(
+        `#${inputElement.name}-error`
+      );
+
+      inputElement.classList.remove(this._inputErrorClass);
+
+      if (errorElement) {
+        errorElement.textContent = "";
+        errorElement.classList.remove(this._errorClass);
+      }
+    });
+
+    this._toggleButtonState();
+  }
 }
 
 export default FormValidator;

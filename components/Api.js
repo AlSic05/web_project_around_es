@@ -65,6 +65,16 @@ export default class Api {
       headers: this._headers,
     }).then(this._checkResponse);
   }
+
+  updateAvatar(avatarLink) {
+    return fetch(this._baseUrl + "/users/me/avatar", {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: avatarLink,
+      }),
+    }).then(this._checkResponse);
+  }
 }
 
 export function getAppInfo(api) {

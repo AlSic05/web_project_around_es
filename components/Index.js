@@ -34,6 +34,12 @@ const validationConfig = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
 };
+const avatarPopup = document.querySelector("#edit-avatar-popup");
+const avatarForm = document.querySelector("#edit-avatar-form");
+const profileImageContainer = document.querySelector(
+  ".profile__image-container"
+);
+
 let cardSection;
 
 const api = new Api({
@@ -153,6 +159,33 @@ const handleDeleteCallback = (cardId, cardElement) => {
     .then(() => cardElement.remove())
     .catch((err) => console.log(err));
 };
+
+const avatarValidator = new FormValidator(validationConfig, avatarForm);
+avatarValidator.setEventListeners();
+
+const avatarPopupInstance = new PopupWithForm(
+  "#edit-avatar-popup",
+  (formData) => {
+    api
+      .updateAvatar(formData.avatar)
+      .then((userData) => {
+        userInfo.setUserInfo({
+          avatar: userData.avatar,
+        });
+        avatarPopupInstance.close();
+      })
+      .catch((err) => {
+        console.log("Error al actualizar el avatar:", err);
+      });
+  }
+);
+
+avatarPopupInstance.setEventListeners();
+
+profileImageContainer.addEventListener("click", () => {
+  avatarValidator.resetValidation();
+  avatarPopupInstance.open();
+});
 
 confirmationPopup.setEventListeners();
 
