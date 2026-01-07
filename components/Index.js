@@ -100,24 +100,20 @@ const newCardValidator = new FormValidator(validationConfig, newCardForm);
 newCardValidator.setEventListeners();
 
 const profilePopup = new PopupWithForm("#edit-popup", (formData) => {
-  api
+  return api
     .setUserInfo(formData.name, formData.description)
     .then((updatedUserData) => {
       userInfo.setUserInfo({
         name: updatedUserData.name,
         about: updatedUserData.about,
       });
-      profilePopup.close();
-    })
-    .catch((err) => {
-      console.log("Error al actualizar el perfil:", err);
     });
 });
 
 profilePopup.setEventListeners();
 
 const cardPopupInstance = new PopupWithForm("#new-card-popup", (formData) => {
-  api
+  return api
     .addCard(formData["place-name"], formData["link"])
     .then((cardData) => {
       const newCard = new Card(
@@ -126,12 +122,7 @@ const cardPopupInstance = new PopupWithForm("#new-card-popup", (formData) => {
         "#card-template",
         (name, link) => imagePopup.open({ name, link })
       );
-
       cardSection.addItem(newCard.generateCard());
-      cardPopupInstance.close();
-    })
-    .catch((err) => {
-      console.log("Error al agregar tarjeta:", err);
     });
 });
 cardPopupInstance.setEventListeners();
